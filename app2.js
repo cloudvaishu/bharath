@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const http = require('http');
 const fs = require('fs').promises;
 const path = require('path');
@@ -116,3 +117,5 @@ server.listen(PORT, () => {
 
 // Add a simple log to indicate server start
 console.log('Server has been initialized.');
+=======
+>>>>>>> parent of b079b55 (updated code and comments)

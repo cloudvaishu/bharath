@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const http = require('http');
 
 const server = http.createServer((req, res) => {
@@ -19,3 +20,5 @@ exports.divide = (a, b) => {
     if (b === 0) throw new Error('division by zero');
     return a / b;
 };
+=======
+>>>>>>> parent of b079b55 (updated code and comments)
