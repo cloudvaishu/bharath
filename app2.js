@@ -93,13 +93,7 @@ const server = http.createServer(async (req, res) => {
 
         // Not found
         sendJSON(res, { error: 'not found' }, 404);
-    } catch (err) {
-        if (err.code === 'INVALID_JSON') {
-            return sendJSON(res, { error: 'invalid json' }, 400);
-        }
-        console.error('Server error:', err);
-        sendJSON(res, { error: 'internal server error' }, 500);
-    }
+    } 
 });
 
 // graceful shutdown
@@ -115,6 +109,10 @@ function shutdown(signal) {
 process.on('SIGINT', () => shutdown('SIGINT'));
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 
+// Start the server and log the URL
 server.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
 });
+
+// Add a simple log to indicate server start
+console.log('Server has been initialized.');

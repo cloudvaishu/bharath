@@ -15,6 +15,7 @@ const server = http.createServer((req, res) => {
 
 const PORT = 3000;
 // Start the server and listen on the specified port
-server.listen(PORT, () => {
-    console.log(`Server is running at http://localhost:${PORT}/`);
-});
+exports.divide = (a, b) => {
+    if (b === 0) throw new Error('division by zero');
+    return a / b;
+};
