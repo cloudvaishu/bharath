@@ -2,6 +2,8 @@
 const http = require('http');
 const fs = require('fs').promises;
 const path = require('path');
+const express = require('express');
+const bodyParser = require('body-parser');
 
 /**
  * app2.js - Simple Node.js example server
@@ -119,3 +121,64 @@ server.listen(PORT, () => {
 console.log('Server has been initialized.');
 =======
 >>>>>>> parent of b079b55 (updated code and comments)
+// New example: Simple Express.js server
+
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+const DATA_FILE = path.resolve(__dirname, 'data.json');
+
+app.use(bodyParser.json());
+
+app.get('/', (req, res) => {
+    res.send(`
+        <!doctype html>
+        <html>
+            <head><meta charset="utf-8"><title>Express Example</title></head>
+            <body>
+                <h1>Express.js Example</h1>
+                <ul>
+                    <li><a href="/time">/time</a> - server time (JSON)</li>
+                    <li><a href="/data">/data</a> - read saved JSON</li>
+                </ul>
+                <p>Use POST /data to save JSON, POST /echo to echo JSON.</p>
+            </body>
+        </html>
+    `);
+});
+
+app.get('/time', (req, res) => {
+    res.json({ serverTime: new Date().toISOString() });
+});
+
+app.get('/data', async (req, res) => {
+    try {
+        const raw = await fs.readFile(DATA_FILE, 'utf8');
+        const obj = JSON.parse(raw);
+        res.json(obj);
+    } catch (err) {
+        if (err.code === 'ENOENT') return res.status(404).json({ error: 'no data found' });
+        res.status(500).json({ error: 'internal server error' });
+    }
+});
+
+app.post('/data', async (req, res) => {
+    const body = req.body;
+    if (!body) return res.status(400).json({ error: 'empty body' });
+    await fs.writeFile(DATA_FILE, JSON.stringify(body, null, 2), 'utf8');
+    res.status(201).json({ saved: true, data: body });
+});
+
+app.post('/echo', (req, res) => {
+    const body = req.body;
+    res.json({ echoed: body });
+});
+
+app.use((req, res) => {
+    res.status(404).json({ error: 'not found' });
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running at http://localhost:${PORT}`);
+});
